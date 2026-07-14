@@ -1,4 +1,6 @@
 import cv2
+import os
+from datetime import datetime
 
 # Open the default webcam
 camera = cv2.VideoCapture(0)
@@ -8,38 +10,36 @@ if not camera.isOpened():
     print("Error: Could not open the webcam.")
     exit()
 
+# Create snapshots folder if it doesn't exist
+os.makedirs("snapshots", exist_ok=True)
+
 # Variable to track grayscale mode
 gray_mode = False
 
-# Continuously read frames
 while True:
-    # Read a frame from the webcam
+    # Read a frame
     ret, frame = camera.read()
 
-    # Check if frame was captured successfully
     if not ret:
         print("Error: Failed to capture frame.")
         break
 
-    # Print frame shape in terminal
-    print(frame.shape)
-
     # Resize the frame
     frame = cv2.resize(frame, (640, 480))
+
+    # Print frame shape
+    print(frame.shape)
 
     # Convert to grayscale if enabled
     if gray_mode:
         display_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        # Convert back to BGR so we can draw colored text and shapes
         display_frame = cv2.cvtColor(display_frame, cv2.COLOR_GRAY2BGR)
-
         mode_text = "Mode: Grayscale"
     else:
         display_frame = frame.copy()
         mode_text = "Mode: Color"
 
-    # Draw project title
+    # Project title
     cv2.putText(
         display_frame,
         "Edge AI Surveillance",
@@ -50,7 +50,7 @@ while True:
         2
     )
 
-    # Display current mode
+    # Current mode
     cv2.putText(
         display_frame,
         mode_text,
@@ -61,7 +61,7 @@ while True:
         2
     )
 
-    # Draw rectangle
+    # Rectangle
     cv2.rectangle(
         display_frame,
         (100, 100),
@@ -70,22 +70,34 @@ while True:
         2
     )
 
-    # Show the frame
+    # Show the camera feed
     cv2.imshow("Edge AI Surveillance - Learning OpenCV", display_frame)
 
     # Read keyboard input
     key = cv2.waitKey(1) & 0xFF
 
-    # Toggle grayscale mode
+    # Toggle grayscale
     if key == ord('g'):
         gray_mode = not gray_mode
         print(f"Grayscale Mode: {'ON' if gray_mode else 'OFF'}")
 
-    # Quit program
+    # Save screenshot
+    elif key == ord('s'):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"snapshots/{timestamp}.jpg"
+
+        success = cv2.imwrite(filename, display_frame)
+
+        if success:
+            print(f"✅ Screenshot saved: {filename}")
+        else:
+            print("❌ Failed to save screenshot.")
+
+    # Quit
     elif key == ord('q'):
         break
 
-# Release webcam
+# Release the camera
 camera.release()
 
 # Close all OpenCV windows
