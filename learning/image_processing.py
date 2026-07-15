@@ -3,31 +3,31 @@ import os
 import time
 from datetime import datetime
 
-# -----------------------------------
+
 # Open Webcam
-# -----------------------------------
+
 camera = cv2.VideoCapture(0)
 
 if not camera.isOpened():
     print("Error: Could not open webcam.")
     exit()
 
-# -----------------------------------
+
 # Create snapshots folder if it doesn't exist
-# -----------------------------------
+
 os.makedirs("snapshots", exist_ok=True)
 
-# -----------------------------------
+
 # Variables
-# -----------------------------------
+
 gray_mode = False
 
 # Used for FPS calculation
 previous_time = time.time()
 
-# -----------------------------------
+
 # Main Loop
-# -----------------------------------
+
 while True:
 
     # Read frame
@@ -43,9 +43,9 @@ while True:
     # Print frame shape (Learning Purpose)
     print(frame.shape)
 
-    # -----------------------------------
+    
     # FPS Calculation
-    # -----------------------------------
+    
     current_time = time.time()
 
     time_difference = current_time - previous_time
@@ -57,9 +57,9 @@ while True:
 
     previous_time = current_time
 
-    # -----------------------------------
+    
     # Grayscale Toggle
-    # -----------------------------------
+    
     if gray_mode:
         display_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -75,9 +75,9 @@ while True:
         display_frame = frame.copy()
         mode_text = "Mode: Color"
 
-    # -----------------------------------
+    
     # Project Title
-    # -----------------------------------
+    
     cv2.putText(
         display_frame,
         "Edge AI Surveillance",
@@ -88,9 +88,9 @@ while True:
         2
     )
 
-    # -----------------------------------
+   
     # Current Mode
-    # -----------------------------------
+    
     cv2.putText(
         display_frame,
         mode_text,
@@ -101,9 +101,9 @@ while True:
         2
     )
 
-    # -----------------------------------
+   
     # FPS Display
-    # -----------------------------------
+    
     cv2.putText(
         display_frame,
         f"FPS: {fps:.2f}",
@@ -114,9 +114,9 @@ while True:
         2
     )
 
-    # -----------------------------------
+    
     # Demo Rectangle
-    # -----------------------------------
+   
     cv2.rectangle(
         display_frame,
         (100, 150),
@@ -125,17 +125,17 @@ while True:
         2
     )
 
-    # -----------------------------------
+   
     # Show Frame
-    # -----------------------------------
+    
     cv2.imshow(
         "Edge AI Surveillance - Learning OpenCV",
         display_frame
     )
 
-    # -----------------------------------
+   
     # Keyboard Controls
-    # -----------------------------------
+   
     key = cv2.waitKey(1) & 0xFF
 
     # Toggle Grayscale
@@ -161,8 +161,8 @@ while True:
     elif key == ord('q'):
         break
 
-# -----------------------------------
+
 # Cleanup
-# -----------------------------------
+
 camera.release()
 cv2.destroyAllWindows()
