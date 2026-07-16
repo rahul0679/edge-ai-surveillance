@@ -21,7 +21,7 @@ if not camera.isOpened():
     exit()
 
 # ============================================
-# Create snapshots folder
+# Create Snapshots Folder
 # ============================================
 os.makedirs("snapshots", exist_ok=True)
 
@@ -30,6 +30,19 @@ os.makedirs("snapshots", exist_ok=True)
 # ============================================
 gray_mode = False
 previous_time = time.time()
+
+# ============================================
+# Threat Detection Settings
+# ============================================
+THREAT_CLASSES = {
+    "person",
+    "car",
+    "bus",
+    "truck",
+    "motorcycle"
+}
+
+CONFIDENCE_THRESHOLD = 0.70
 
 # ============================================
 # Main Loop
@@ -42,7 +55,7 @@ while True:
         print("Failed to capture frame.")
         break
 
-    # Resize frame
+    # Resize
     frame = cv2.resize(frame, (640, 480))
 
     # ----------------------------------------
@@ -67,28 +80,28 @@ while True:
         mode_text = "Mode: Color"
 
     # ----------------------------------------
-    # Run YOLO Detection
+    # YOLO Detection
     # ----------------------------------------
     results = model(display_frame)
 
-    # Make a copy to draw on
     annotated_frame = display_frame.copy()
 
+    threat_count = 0
+
     # ----------------------------------------
-    # Read every detected object
+    # Read Detections
     # ----------------------------------------
     for box in results[0].boxes:
 
-        # Class ID
         class_id = int(box.cls[0])
-
-        # Class Name
         class_name = model.names[class_id]
 
-        # Confidence
         confidence = float(box.conf[0])
 
-        # Bounding Box
+        # Ignore low confidence detections
+        if confidence < CONFIDENCE_THRESHOLD:
+            continue
+
         x1, y1, x2, y2 = box.xyxy[0]
 
         x1 = int(x1)
@@ -96,30 +109,40 @@ while True:
         x2 = int(x2)
         y2 = int(y2)
 
-        # Print detection in terminal
+        # Check if threat
+        is_threat = class_name in THREAT_CLASSES
+
+        if is_threat:
+            threat_count += 1
+            color = (0, 0, 255)      # Red
+            label = f"THREAT: {class_name} ({confidence:.2f})"
+
+        else:
+            color = (0, 255, 0)      # Green
+            label = f"{class_name} ({confidence:.2f})"
+
+        # Print detection
         print(
-            f"Detected: {class_name} | Confidence: {confidence:.2f}"
+            f"{class_name} | {confidence:.2f} | Threat = {is_threat}"
         )
 
-        # Draw Rectangle
+        # Draw Bounding Box
         cv2.rectangle(
             annotated_frame,
             (x1, y1),
             (x2, y2),
-            (0, 255, 0),
+            color,
             2
         )
 
-        # Label
-        label = f"{class_name} {confidence:.2f}"
-
+        # Draw Label
         cv2.putText(
             annotated_frame,
             label,
             (x1, y1 - 10),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
-            (0, 255, 0),
+            color,
             2
         )
 
@@ -137,7 +160,7 @@ while True:
     )
 
     # ----------------------------------------
-    # Mode Display
+    # Mode
     # ----------------------------------------
     cv2.putText(
         annotated_frame,
@@ -150,7 +173,7 @@ while True:
     )
 
     # ----------------------------------------
-    # FPS Counter
+    # FPS
     # ----------------------------------------
     cv2.putText(
         annotated_frame,
@@ -159,6 +182,32 @@ while True:
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
         (255, 255, 0),
+        2
+    )
+
+    # ----------------------------------------
+    # Threat Counter
+    # ----------------------------------------
+    cv2.putText(
+        annotated_frame,
+        f"Threats: {threat_count}",
+        (20, 140),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (0, 0, 255),
+        2
+    )
+
+    # ----------------------------------------
+    # Confidence Threshold
+    # ----------------------------------------
+    cv2.putText(
+        annotated_frame,
+        f"Confidence >= {int(CONFIDENCE_THRESHOLD*100)}%",
+        (20, 175),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
         2
     )
 
@@ -176,10 +225,10 @@ while True:
     )
 
     # ----------------------------------------
-    # Show Output
+    # Display Window
     # ----------------------------------------
     cv2.imshow(
-        "Edge AI Surveillance - YOLO",
+        "Edge AI Surveillance",
         annotated_frame
     )
 
@@ -192,6 +241,7 @@ while True:
     if key == ord("g"):
 
         gray_mode = not gray_mode
+
         print(
             f"Grayscale Mode: {'ON' if gray_mode else 'OFF'}"
         )
@@ -199,18 +249,11 @@ while True:
     # Screenshot
     elif key == ord("s"):
 
-        timestamp = datetime.now().strftime(
-            "%Y-%m-%d_%H-%M-%S"
-        )
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
         filename = f"snapshots/{timestamp}.jpg"
 
-        success = cv2.imwrite(
-            filename,
-            annotated_frame
-        )
-
-        if success:
+        if cv2.imwrite(filename, annotated_frame):
             print(f"Screenshot Saved: {filename}")
         else:
             print("Failed to save screenshot.")
