@@ -49,9 +49,7 @@ while True:
     # FPS Calculation
     # ----------------------------------------
     current_time = time.time()
-
     fps = 1 / (current_time - previous_time)
-
     previous_time = current_time
 
     # ----------------------------------------
@@ -60,19 +58,12 @@ while True:
     if gray_mode:
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        # Convert back to BGR
-        display_frame = cv2.cvtColor(
-            gray,
-            cv2.COLOR_GRAY2BGR
-        )
-
+        display_frame = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
         mode_text = "Mode: Grayscale"
 
     else:
 
         display_frame = frame.copy()
-
         mode_text = "Mode: Color"
 
     # ----------------------------------------
@@ -80,7 +71,57 @@ while True:
     # ----------------------------------------
     results = model(display_frame)
 
-    annotated_frame = results[0].plot()
+    # Make a copy to draw on
+    annotated_frame = display_frame.copy()
+
+    # ----------------------------------------
+    # Read every detected object
+    # ----------------------------------------
+    for box in results[0].boxes:
+
+        # Class ID
+        class_id = int(box.cls[0])
+
+        # Class Name
+        class_name = model.names[class_id]
+
+        # Confidence
+        confidence = float(box.conf[0])
+
+        # Bounding Box
+        x1, y1, x2, y2 = box.xyxy[0]
+
+        x1 = int(x1)
+        y1 = int(y1)
+        x2 = int(x2)
+        y2 = int(y2)
+
+        # Print detection in terminal
+        print(
+            f"Detected: {class_name} | Confidence: {confidence:.2f}"
+        )
+
+        # Draw Rectangle
+        cv2.rectangle(
+            annotated_frame,
+            (x1, y1),
+            (x2, y2),
+            (0, 255, 0),
+            2
+        )
+
+        # Label
+        label = f"{class_name} {confidence:.2f}"
+
+        cv2.putText(
+            annotated_frame,
+            label,
+            (x1, y1 - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
 
     # ----------------------------------------
     # Project Title
@@ -151,12 +192,11 @@ while True:
     if key == ord("g"):
 
         gray_mode = not gray_mode
-
         print(
             f"Grayscale Mode: {'ON' if gray_mode else 'OFF'}"
         )
 
-    # Save Screenshot
+    # Screenshot
     elif key == ord("s"):
 
         timestamp = datetime.now().strftime(
