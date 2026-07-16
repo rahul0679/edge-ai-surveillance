@@ -42,22 +42,31 @@ Edge-AI-Surveillance/
 
 ## ✅ Progress
 
-* [x] Project setup
-* [x] GitHub repository created
-* [x] Git initialized
-* [x] OpenCV installed
-* [x] Webcam integration
-* [x] Frame information (`frame.shape`)
-* [x] Drawing text on video
-* [x] Drawing rectangles on video
-* [ ] Image preprocessing
-* [ ] Screenshot capture
-* [ ] YOLO integration
-* [ ] Threat detection
-* [ ] Alert system
-* [ ] SQLite logging
-* [ ] Desktop GUI
-* [ ] Performance optimization
+- [x] Project setup
+- [x] GitHub repository created
+- [x] Git initialized
+- [x] OpenCV installed
+- [x] Webcam integration
+- [x] Frame information (`frame.shape`)
+- [x] Drawing text on video
+- [x] Drawing rectangles on video
+- [x] Image resizing
+- [x] Grayscale mode toggle
+- [x] Screenshot capture
+- [x] FPS counter
+- [x] YOLOv8 model integration
+- [x] Real-time object detection
+- [x] Custom bounding box rendering
+- [x] Object labels with confidence score
+
+### 🚧 Upcoming Features
+
+- [ ] Threat filtering
+- [ ] SQLite logging
+- [ ] Desktop notifications
+- [ ] Alarm sound
+- [ ] GUI Dashboard
+- [ ] ONNX Optimization
 
 ## 🚀 Learning Journey
 
