@@ -262,8 +262,8 @@ while True:
     elif key == ord("q"):
         break
 
-# ============================================
+
 # Cleanup
-# ============================================
+
 camera.release()
 cv2.destroyAllWindows()
