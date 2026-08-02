@@ -13,6 +13,8 @@ import time
 from datetime import datetime
 from ultralytics import YOLO
 from src.utils.database import create_table, insert_detection
+from src.alerts.notification import show_notification 
+
 
 # ============================================
 # Load YOLO Model
@@ -171,10 +173,16 @@ try:
 
                     # Save to Database
                     insert_detection(
-                        timestamp,
-                        class_name,
-                        confidence,
-                        snapshot_path
+                    timestamp,
+                    class_name,
+                    confidence,
+                    snapshot_path
+                    )
+
+                    # Desktop Notification  
+                    show_notification(
+                    class_name.capitalize(),
+                    confidence
                     )
 
                     last_logged[class_name] = log_time
