@@ -1,71 +1,205 @@
 # ThirdEye AI Cam
 
-ThirdEye AI Cam is an AI-powered desktop surveillance system that performs real-time object detection using YOLOv8. It identifies potential threats, stores detection history in SQLite, captures snapshots, triggers desktop notifications, and plays alarm sounds — all while running completely offline.
+## AI-Powered Real-Time Surveillance System
 
-## 📌 Project Goal
+ThirdEye AI Cam is an offline desktop-based surveillance application that uses computer vision and YOLO object detection to identify potential threats through a live webcam feed.
 
-The goal of this project is to build a real-time surveillance application that can:
+The system provides real-time object detection, threat classification, snapshot capture, database logging, desktop notifications, and an audible alarm.
 
-* Read live video from a webcam or RTSP camera
-* Detect threats using AI models (YOLO)
-* Display detections with bounding boxes
-* Trigger desktop notifications and alarm sounds
-* Save screenshots of detected threats
-* Store detection logs in a local SQLite database
-* Work completely offline with low latency
+---
 
-## 🛠️ Tech Stack
+## Features
 
-* Python
-* OpenCV
-* NumPy
-* YOLO (Ultralytics)
-* ONNX Runtime (later)
-* SQLite
-* CustomTkinter / PyQt (later)
-* Git & GitHub
+- Real-time webcam monitoring
+- YOLO-based object detection
+- Threat classification
+- Confidence threshold filtering
+- Real-time FPS monitoring
+- Threat counter
+- Bounding-box visualization
+- Automatic threat snapshots
+- SQLite detection history
+- Desktop notifications
+- Audible threat alarm
+- Detection History dashboard
+- Snapshot viewer
+- Start / Stop camera controls
+- Offline processing
 
-## 📂 Current Project Structure
+---
+
+## Threat Classes
+
+The current system treats the following detected objects as threats:
+
+- Person
+- Car
+- Bus
+- Truck
+- Motorcycle
+
+The confidence threshold is currently set to:
 
 ```text
-Edge-AI-Surveillance/
+70% 
+
+Technology Stack
+Technology	Purpose
+Python	Core programming language
+OpenCV	Camera and image processing
+YOLO / Ultralytics	Object detection
+Tkinter	Desktop GUI
+Pillow	Image handling
+SQLite	Detection database
+NumPy	Numerical processing
+Git & GitHub	Version control
+Project Structure
+ThirdEye-AI-Cam/
 │
-├── camera_test.py
-├── frame_info.py
-├── image_processing.py
-├── README.md
+├── main.py
 ├── requirements.txt
-└── .gitignore
-```
+├── README.md
+├── yolov8n.pt
+│
+├── snapshots/
+│
+├── database/
+│
+└── src/
+    │
+    ├── alerts/
+    │   ├── alarm.py
+    │   └── notification.py
+    │
+    ├── camera/
+    │   └── camera.py
+    │
+    ├── detection/
+    │   └── detector.py
+    │
+    ├── gui/
+    │   ├── dashboard.py
+    │   └── app.py
+    │
+    └── utils/
+        └── database.py
+How It Works
+Webcam
+   ↓
+Camera Module
+   ↓
+Frame Capture
+   ↓
+YOLO Object Detection
+   ↓
+Confidence Filtering
+   ↓
+Threat Classification
+   ↓
+┌───────────────┬────────────────┐
+│               │                │
+Snapshot       SQLite          Alert
+   │            Database       System
+   │               │              │
+   └───────────────┴──────────────┘
+                   ↓
+             Dashboard
+Installation
+1. Clone the repository
+git clone https://github.com/rahul0679/edge-ai-surveillance.git
+cd edge-ai-surveillance
+2. Create a virtual environment
 
-> The project structure will be improved gradually as new modules are added.
+Windows:
 
-## ✅ Progress
+python -m venv venv
+3. Activate the environment
+venv\Scripts\activate
+4. Install dependencies
+pip install -r requirements.txt
+Running the Application
 
-- [x] Project setup
-- [x] Webcam integration
-- [x] Grayscale mode
-- [x] FPS counter
-- [x] Manual screenshot capture
-- [x] YOLO object detection
-- [x] Threat classification
-- [x] Automatic threat screenshots
-- [x] SQLite database logging
-- [ ] Desktop notifications
-- [ ] Alarm system
-- [ ] GUI dashboard
-- [ ] Detection history viewer
-- [ ] Performance optimization
+Run:
 
-## 🚀 Learning Journey
+python main.py
 
-This repository is being built from scratch while learning Computer Vision and Edge AI. Every feature is implemented step by step to understand how a real-world AI surveillance application works.
+The ThirdEye AI Cam dashboard will open.
 
-## 📅 Latest Update
+Click:
 
-Completed OpenCV basics:
+START CAMERA
 
-* Live webcam feed
-* Frame inspection
-* Text overlay
-* Rectangle drawing
+to begin real-time monitoring.
+
+Detection Workflow
+
+When an object is detected:
+
+YOLO identifies the object.
+Confidence is checked.
+Threat classes are identified.
+A bounding box is drawn.
+Threat count is updated.
+A snapshot is saved.
+Detection is stored in SQLite.
+Desktop notification is generated.
+Audible alarm is triggered.
+Detection History
+
+The Detection History section displays previously recorded detections including:
+
+Detection ID
+Timestamp
+Object class
+Confidence
+Snapshot path
+
+Double-clicking a detection allows the saved snapshot to be viewed.
+
+Database
+
+Detection information is stored locally using SQLite.
+
+Each detection contains:
+
+ID
+Timestamp
+Object Class
+Confidence
+Snapshot Path
+
+No cloud database is required.
+
+Privacy
+
+ThirdEye AI Cam is designed for local/offline processing.
+
+Camera frames are processed locally and detection information is stored locally in the project's SQLite database.
+
+Future Improvements
+
+Possible future enhancements include:
+
+Custom-trained threat detection models
+Multiple camera support
+RTSP/IP camera support
+Email alerts
+Telegram alerts
+User authentication
+Detection analytics
+Configurable threat classes
+Configurable confidence threshold
+GPU acceleration
+ONNX optimization
+Automatic report generation
+Author
+
+Rahul
+
+BCA – Artificial Intelligence & Machine Learning
+
+Project Status
+
+Completed — Functional Prototype
+
+ThirdEye AI Cam currently provides a working end-to-end desktop surveillance pipeline with real-time detection, alerting, snapshot capture, and database logging.
