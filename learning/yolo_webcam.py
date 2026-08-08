@@ -200,7 +200,7 @@ try:
         # Project Title
         cv2.putText(
             annotated_frame,
-            "Edge AI Surveillance",
+            "ThirdEye AI Cam",
             (20, 35),
             cv2.FONT_HERSHEY_SIMPLEX,
             1,
@@ -266,7 +266,7 @@ try:
         # ----------------------------------------
         # Display Window
         # ----------------------------------------
-        cv2.imshow("Edge AI Surveillance", annotated_frame)
+        cv2.imshow("ThirdEye AI Cam", annotated_frame)
 
         # ----------------------------------------
         # Keyboard Controls

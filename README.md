@@ -1,6 +1,6 @@
-# Edge AI Surveillance
+# ThirdEye AI Cam
 
-An offline desktop-based surveillance system that performs real-time object detection using Computer Vision and Edge AI without relying on cloud services.
+ThirdEye AI Cam is an AI-powered desktop surveillance system that performs real-time object detection using YOLOv8. It identifies potential threats, stores detection history in SQLite, captures snapshots, triggers desktop notifications, and plays alarm sounds — all while running completely offline.
 
 ## 📌 Project Goal
 

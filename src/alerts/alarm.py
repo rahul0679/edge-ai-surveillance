@@ -1,24 +1,20 @@
-from playsound import playsound
+import winsound
 import threading
-import os
 
-# Alarm file path
-ALARM_PATH = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
-        "assets",
-        "sounds",
-        "alarm.wav"
-    )
-)
 
 def play_alarm():
-    def sound():
-        try:
-            playsound(ALARM_PATH)
-        except Exception as e:
-            print(f"Alarm Error: {e}")
+    """
+    Plays a short emergency alarm.
+    Runs in a separate thread so the GUI does not freeze.
+    """
 
-    threading.Thread(target=sound, daemon=True).start()
+    def alarm_sound():
+
+        for _ in range(3):
+            winsound.Beep(1200, 300)
+            winsound.Beep(800, 300)
+
+    threading.Thread(
+        target=alarm_sound,
+        daemon=True
+    ).start()
